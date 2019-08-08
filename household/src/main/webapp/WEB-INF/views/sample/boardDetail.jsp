@@ -35,6 +35,16 @@
                     ${map.CONTENTS }
                 </td>
             </tr>
+            <tr>
+                <th>첨부파일</th>
+                <td colspan="3">
+                    <c:forEach items="${list}" var="row" >
+                            <input type="hidden" value="${row.IDX }" id="IDX">
+                            <a href="#this" name="file">${row.ORIGINAL_FILE_NAME }</a>
+                            (${row.FILE_SIZE }Byte)
+                    </c:forEach>
+                </td>                          
+            </tr>
         </tbody>
     </table>
     
@@ -53,6 +63,10 @@
                 e.preventDefault();
                 fn_openBoardModify();
             })
+            $("a[name='file']").on("click",function(e){
+                e.preventDefault();
+                fn_fileDownload($(this));
+            })
         })
          
         function fn_openBoardList(){
@@ -66,6 +80,14 @@
             comSubmit.setUrl("<c:url value='/sample/openBoardModify.do'/>");
             comSubmit.addParam("IDX",idx);
             comSubmit.submit();
+        }
+        function fn_fileDownload(obj){
+        	var idx = obj.parent().find("#IDX").val();
+        	var comSubmit = new ComSubmit();
+        	comSubmit.setUrl("<c:url value='/common/downloadFile.do' />");
+        	comSubmit.addParam("IDX", idx);
+        	comSubmit.submit();
+        	$("#commonForm").children().remove(); //다시 다운로드시, 방금 추가된 param 삭제
         }
     </script> 
 </body>

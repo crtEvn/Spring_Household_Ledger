@@ -32,6 +32,12 @@
         </mvc:interceptor>
     </mvc:interceptors>
 	
+	<!-- CustomMapArgumentResolver 등록 -->
+	<mvc:annotation-driven>
+    	<mvc:argument-resolvers>
+        	<beans:bean class="com.household.myapp.common.resolver.CustomMapArgumentResolver" />
+    	</mvc:argument-resolvers>
+    </mvc:annotation-driven>
 	
 </beans:beans>
 

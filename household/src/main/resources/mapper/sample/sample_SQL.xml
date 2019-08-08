@@ -11,65 +11,86 @@
 	-->
 	<select id="sample.selectBoardList" resultType="hashmap" parameterType="hashmap" >
         <![CDATA[
-            SELECT IDX, TITLE, HIT_CNT, CREA_DTM, CREA_ID
-            FROM TB_BOARD
-            WHERE DEL_GB='N'
-            ORDER BY IDX DESC
+            SELECT
+            	IDX, TITLE, HIT_CNT, CREA_DTM, CREA_ID
+            FROM
+            	TB_BOARD
+            WHERE
+            	DEL_GB='N'
+            ORDER BY
+            	IDX DESC
         ]]>
      </select>
 	
-	<insert id="sample.writeBoard" parameterType="hashmap">
+	<insert id="sample.writeBoard" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX">
 		<![CDATA[
-			INSERT INTO TB_BOARD(TITLE, CONTENTS, HIT_CNT, DEL_GB, CREA_ID)
-			VALUES( #{TITLE}, #{CONTENTS}, 0, 'N', 'ADMIN')
+			INSERT INTO TB_BOARD
+				(TITLE, CONTENTS, HIT_CNT, DEL_GB, CREA_ID)
+			VALUES
+				(#{TITLE}, #{CONTENTS}, 0, 'N', 'Admin')
+		]]>
+	</insert>
+	
+	<insert id="sample.insertFile" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO TB_FILE
+				(BOARD_IDX, ORIGINAL_FILE_NAME, STORED_FILE_NAME, FILE_SIZE, CREA_ID)
+			VALUES
+				(#{BOARD_IDX}, #{ORIGINAL_FILE_NAME}, #{STORED_FILE_NAME}, #{FILE_SIZE}, 'Admin')
 		]]>
 	</insert>
 	
 	<select id="sample.selectBoard" parameterType="hashmap" resultType="hashmap">
-   <![CDATA[
-       SELECT
-           IDX,
-           TITLE,
-           CONTENTS,
-           HIT_CNT,
-           CREA_ID,
-           CREA_DTM
-       FROM
-           TB_BOARD
-       WHERE
-           IDX=#{IDX}
-   ]]>
-</select>
+		<![CDATA[
+			SELECT
+				IDX, TITLE, CONTENTS, HIT_CNT, CREA_ID, CREA_DTM
+			FROM
+				TB_BOARD
+			WHERE
+				IDX=#{IDX}
+		]]>
+	</select>
+	
+	<select id="selectFileList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT 
+				IDX, ORIGINAL_FILE_NAME, ROUND(FILE_SIZE/1024,1) AS FILE_SIZE
+			FROM
+				TB_FILE
+			WHERE
+				BOARD_IDX = #{IDX} AND DEL_GB = 'N'
+		]]>
+	</select>
  
-<update id="sample.updateHitCnt" parameterType="hashmap">
-   <![CDATA[
-       UPDATE TB_BOARD
-       SET
-           HIT_CNT = HIT_CNT+1
-       WHERE
-           IDX=#{IDX}
-   ]]>
-</update>
+	<update id="sample.updateHitCnt" parameterType="hashmap">
+		<![CDATA[
+			UPDATE TB_BOARD
+			SET
+				HIT_CNT = HIT_CNT+1
+			WHERE
+				IDX=#{IDX}
+		]]>
+	</update>
 
-<update id="sample.modifyBoard" parameterType="hashmap">
-   <![CDATA[
-       UPDATE TB_BOARD
-       SET
-           TITLE=#{TITLE},
-           CONTENTS=#{CONTENTS}
-       WHERE
-           IDX=#{IDX}
-   ]]>
-</update>
+	<update id="sample.modifyBoard" parameterType="hashmap">
+		<![CDATA[
+			UPDATE TB_BOARD
+			SET
+				TITLE=#{TITLE}, CONTENTS=#{CONTENTS}
+			WHERE
+				IDX=#{IDX}
+		]]>
+	</update>
 
-<update id="sample.deleteBoard" parameterType="hashmap">
-   <![CDATA[
-       UPDATE TB_BOARD
-       SET
-           DEL_GB='Y'
-       WHERE
-           IDX=#{IDX}
-   ]]>
-</update>
+	<update id="sample.deleteBoard" parameterType="hashmap">
+		<![CDATA[
+			UPDATE TB_BOARD
+			SET
+				DEL_GB='Y'
+			WHERE
+				IDX=#{IDX}
+		]]>
+	</update>
+
 
 </mapper>

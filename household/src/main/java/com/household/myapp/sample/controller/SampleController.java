@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +24,7 @@ import com.household.myapp.sample.service.SampleService;
 
 
 @Controller // 해당 class가 Controller라고 말해주는 어노테이션
-class SampleController {
+public class SampleController {
 	
     protected Log log = LogFactory.getLog(SampleController.class);
     //Logger log = Logger.getLogger(this.getClass());
@@ -76,9 +77,9 @@ class SampleController {
     }
      
     @RequestMapping(value="/sample/writeBoard.do")
-    public ModelAndView writeBoard(CommandMap commandMap) throws Exception{
+    public ModelAndView writeBoard(CommandMap commandMap, HttpServletRequest req) throws Exception{
         ModelAndView mv = new ModelAndView("redirect:/sample/openBoardList.do");
-        sampleService.writeBoard(commandMap.getMap());
+        sampleService.writeBoard(commandMap.getMap(),req);
                  
         return mv;
     }
@@ -87,7 +88,8 @@ class SampleController {
     public ModelAndView openBoardDetail(CommandMap commandMap) throws Exception{
         ModelAndView mv = new ModelAndView("/sample/boardDetail");
         Map<String,Object> map = sampleService.selectBoard(commandMap.getMap());
-        mv.addObject("map", map);
+        mv.addObject("map", map.get("map"));
+        mv.addObject("list", map.get("list"));
         return mv;
     }
     
@@ -95,7 +97,7 @@ class SampleController {
     public ModelAndView openBoardModify(CommandMap commandMap) throws Exception{
         ModelAndView mv = new ModelAndView("/sample/boardModify");
         Map<String,Object> map = sampleService.selectBoard(commandMap.getMap());
-        mv.addObject("map",map);
+        mv.addObject("map",map.get("map"));
         return mv;
     }
      
