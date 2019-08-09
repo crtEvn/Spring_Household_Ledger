@@ -51,7 +51,7 @@ public class FileUtils {
 		while(iterator.hasNext()){
 			multipartFile = multipartHttpServletRequest.getFile(iterator.next());
 			
-			if(multipartFile.isEmpty() == false){
+			if(multipartFile.isEmpty() == false){ // 넘어온 File이 있을 경우
 				originalFileName = multipartFile.getOriginalFilename();
 				originalFileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 				storedFileName = CommonUtils.getRandomString() + originalFileExtension;
@@ -71,4 +71,54 @@ public class FileUtils {
 		
 		return fileList;
 	}
+	
+	public List<Map<String, Object>> parseUpdateFileInfo(Map<String, Object> map, HttpServletRequest request) throws Exception {
+		
+		log.debug("파일 저장 경로"+filePath);
+
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
+		;Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+		
+		MultipartFile multipartFile = null;
+		String originalFileName = null;
+		String originalFileExtension = null;
+		String storedFileName = null;
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> listMap = null;
+		
+		String boardIdx = (String) map.get("IDX");
+		String requestName = null;
+		String idx = null;
+		
+		while (iterator.hasNext()) {
+			multipartFile = multipartHttpServletRequest.getFile(iterator.next());
+			
+			if (multipartFile.isEmpty() == false) {  // 새로 넘어온 File인 경우
+				originalFileName = multipartFile.getOriginalFilename();
+				originalFileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+				storedFileName = CommonUtils.getRandomString() + originalFileExtension;
+				multipartFile.transferTo(new File(filePath + storedFileName));
+				
+				listMap = new HashMap<String, Object>();
+				listMap.put("IS_NEW", "Y"); // IS_NEW="Y": 새로 저장된 File이라는 뜻
+				listMap.put("BOARD_IDX", boardIdx);
+				listMap.put("ORIGINAL_FILE_NAME", originalFileName);
+				listMap.put("STORED_FILE_NAME", storedFileName);
+				listMap.put("FILE_SIZE", multipartFile.getSize());
+				list.add(listMap);
+			} else { // 새로 넘어온 File이 아닌 경우(=기존에 저장된 File인 경우)
+				requestName = multipartFile.getName(); // jsp 페이지 <input type="file">의 name="file_num"
+				idx = "IDX_" + requestName.substring(requestName.indexOf("_") + 1); // IDX_ 뒤에 숫자를 붙여줌
+				if (map.containsKey(idx) == true && map.get(idx) != null) { // 기존에 저장되어 있던 File인 경우
+					listMap = new HashMap<String, Object>();
+					listMap.put("IS_NEW", "N");
+					listMap.put("FILE_IDX", map.get(idx));
+					list.add(listMap);
+				}
+			}
+		}
+		return list;
+	}
+
 }

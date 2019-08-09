@@ -77,9 +77,9 @@ public class SampleController {
     }
      
     @RequestMapping(value="/sample/writeBoard.do")
-    public ModelAndView writeBoard(CommandMap commandMap, HttpServletRequest req) throws Exception{
+    public ModelAndView writeBoard(CommandMap commandMap, HttpServletRequest request) throws Exception{
         ModelAndView mv = new ModelAndView("redirect:/sample/openBoardList.do");
-        sampleService.writeBoard(commandMap.getMap(),req);
+        sampleService.writeBoard(commandMap.getMap(), request);
                  
         return mv;
     }
@@ -98,13 +98,14 @@ public class SampleController {
         ModelAndView mv = new ModelAndView("/sample/boardModify");
         Map<String,Object> map = sampleService.selectBoard(commandMap.getMap());
         mv.addObject("map",map.get("map"));
+        mv.addObject("list",map.get("list"));
         return mv;
     }
      
     @RequestMapping(value="/sample/modifyBoard.do")
-    public ModelAndView modifyBoard(CommandMap commandMap) throws Exception{
+    public ModelAndView modifyBoard(CommandMap commandMap, HttpServletRequest request) throws Exception{
         ModelAndView mv = new ModelAndView("redirect:/sample/openBoardDetail.do");
-        sampleService.modifyBoard(commandMap.getMap());
+        sampleService.modifyBoard(commandMap.getMap(), request);
         
         mv.addObject("IDX", commandMap.get("IDX"));
         return mv;

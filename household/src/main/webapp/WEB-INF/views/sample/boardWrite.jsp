@@ -30,15 +30,20 @@
         <div id="fileDiv">
             <p>
                 <input type="file" name="file_0"/>
+                <a href="#this" class="btn" id="delete" name="delete">삭제</a>
             </p> 
         </div>
-         
+        
+        <a href="#this" id="addFile" class="btn">파일 추가하기</a>
         <a href="#this" id="list" class="btn">목록으로</a>
         <a href="#this" id="write" class="btn">글쓰기</a>
     </form>
     <%@ include file="/WEB-INF/include/include-body.jspf" %>  
      
     <script type="text/javascript">
+    	
+    	var gfv_count = 1; // 파일 업로드 카운트
+    
         $(document).ready(function(){
             $("#list").on("click",function(e){ // 목록으로 버튼
                 e.preventDefault();
@@ -48,6 +53,15 @@
                 e.preventDefault();
                 fn_writeBoard();
             })
+            $("#addFile").on("click", function(e){ //파일 추가 버튼
+            	e.preventDefault();
+            	fn_addFile();
+            });
+            $("a[name='delete']").on("click", function(e){ //삭제 버튼
+            	e.preventDefault();
+            	fn_deleteFile($(this));
+            });
+
         });
 		   
         function fn_openBoardList(){
@@ -60,6 +74,18 @@
             var comSubmit = new ComSubmit("frm");
             comSubmit.setUrl("<c:url value='/sample/writeBoard.do'/>");
             comSubmit.submit();
+        }
+        
+        function fn_addFile(){
+        	var str = "<p><input type='file' name='file_"+(gfv_count++)+"'><a href='#this' class='btn' name='delete'>삭제</a></p>";
+        	$("#fileDiv").append(str);
+        	$("a[name='delete']").on("click", function(e){ //삭제 버튼
+        		e.preventDefault(); fn_deleteFile($(this));
+        	});
+		}
+        
+        function fn_deleteFile(obj){
+        	obj.parent().remove();
         }
     </script>
 </body>
