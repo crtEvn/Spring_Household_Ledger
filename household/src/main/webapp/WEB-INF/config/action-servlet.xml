@@ -38,6 +38,13 @@
         	<beans:bean class="com.household.myapp.common.resolver.CustomMapArgumentResolver" />
     	</mvc:argument-resolvers>
     </mvc:annotation-driven>
+    
+    <!-- AdminLTE Resource 추가 -->
+    <!-- <resources mapping="/bower_components/**" location="/resources/bower_components"/>
+    <resources mapping="/dist/**" location="/resources/dist"/>
+    <resources mapping="/plugins/**" location="/resources/plugins"/> -->
+    <!-- <resources mapping="/resources/**" location="/resources/"/> -->
+    <resources mapping="/**" location="/resources/" />
 	
 </beans:beans>
 

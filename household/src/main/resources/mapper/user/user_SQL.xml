@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+	
+	<!-- 회원가입 insert 구문 -->
+	<insert id="user.insertUser" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO USERS
+				(user_id, user_pw, user_email)
+			VALUES
+				(#{user_id}, #{user_pw}, #{user_email})
+		]]>
+	</insert>
+	
+	<!-- ID 중복 체크 select 구문 -->
+	<select id="user.selectUserID" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT 
+				*
+			FROM
+				users
+			WHERE
+				user_id = #{user_id}
+		]]>
+	</select>
+	
+	<!-- Email 중복 체크 --><!-- resultType="int" or "java.lang.Integer" -->
+	<select id="user.selectUserEmail" parameterType="hashmap" resultType="java.lang.String">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				users
+			WHERE
+				user_email = #{user_email}
+		]]>
+	</select>
+
+</mapper>

@@ -50,7 +50,7 @@ public class SampleController {
         
         List<Map<String,Object>> list = sampleService.selectBoardList(commandMap);
         mv.addObject("list", list);
-         
+        
         return mv;
     }
     
