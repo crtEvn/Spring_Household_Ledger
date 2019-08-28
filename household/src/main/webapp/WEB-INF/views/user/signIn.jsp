@@ -1,3 +1,4 @@
+<%@page import="java.util.Enumeration"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -21,17 +22,21 @@
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
 
-    <form action="../../index2.html" method="post">
+    <form id="frm" name="frm">
     
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
+        <input type="text" class="form-control" name="user_id" placeholder="아이디">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
+        <input type="password" class="form-control" name="user_pw" placeholder="비밀번호">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
+      
+      <c:if test="${login_error }">
+      	아이디 또는 비밀번호가 일치하지 않습니다.
+      </c:if>
       
       <div class="row">
         <div class="col-xs-8">
@@ -43,7 +48,7 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">로그인</button>
+          <a href="#this" id="btn_sign_in" class="btn btn-primary btn-block btn-flat">로그인</a>
         </div>
         <!-- /.col -->
       </div>
@@ -67,6 +72,23 @@
 
 <%@ include file="/WEB-INF/include/include-body.jspf" %>
 <%@ include file="/WEB-INF/include/user/user-body.jspf" %>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		$("#btn_sign_in").on("click",function(e){
+			e.preventDefault();
+			fn_signIn();
+		})
+	});
+	
+	function fn_signIn(){
+		var comSubmit = new ComSubmit("frm");
+		comSubmit.setUrl("<c:url value='/user/signIn.do'/>");
+		comSubmit.submit();
+	}
+	
+</script>
 
 </body>
 </html>

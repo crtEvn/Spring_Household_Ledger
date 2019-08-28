@@ -56,7 +56,6 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
-          <!-- <button type="submit" class="btn btn-primary btn-block btn-flat">회원가입</button> -->
           <a href="#this" id="btn_sign_up" class="btn btn-primary btn-block btn-flat">회원가입</a>
         </div>
         <!-- /.col -->

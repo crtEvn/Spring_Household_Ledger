@@ -13,7 +13,7 @@
 		]]>
 	</insert>
 	
-	<!-- ID 중복 체크 select 구문 -->
+	<!-- ID 중복 체크/user 정보 가져오기 select 구문 -->
 	<select id="user.selectUserID" parameterType="hashmap" resultType="hashmap">
 		<![CDATA[
 			SELECT 

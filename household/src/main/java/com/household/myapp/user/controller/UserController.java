@@ -2,6 +2,7 @@ package com.household.myapp.user.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +14,7 @@ import com.household.myapp.common.common.CommandMap;
 import com.household.myapp.sample.controller.SampleController;
 import com.household.myapp.sample.service.SampleService;
 import com.household.myapp.user.service.UserService;
+import com.household.myapp.user.spring.UserInfo;
 
 
 @Controller
@@ -27,15 +29,45 @@ public class UserController {
     @RequestMapping(value="/user/openSignIn.do")
     public ModelAndView openSignIn(CommandMap commandMap) throws Exception{
         ModelAndView mv = new ModelAndView("/user/signIn");
+        
+        mv.addObject("login_error", commandMap.get("login_error"));
+        
         return mv;
     }
     
     // 로그인 기능
+    @RequestMapping(value="/user/signIn.do")
+    public ModelAndView signIn(CommandMap commandMap, HttpSession session) throws Exception{
+    	
+    	ModelAndView mv = null;
+    	UserInfo userInfo = userService.signIn(commandMap.getMap());
+    	
+    	if(!userInfo.isLogin_error()) {
+    		session.setAttribute("userInfo", userInfo);
+    		mv = new ModelAndView("redirect:/main/main.do");
+    	}else {
+    		mv = new ModelAndView("redirect:/user/openSignIn.do");
+    		mv.addObject("login_error", userInfo.isLogin_error());
+    	}
+    	
+    	return mv;
+    }
+    
+    // 로그아웃 기능
+    @RequestMapping(value="/user/logOut.do")
+    public ModelAndView logOut(CommandMap commandMap, HttpSession session) throws Exception{
+    	
+    	ModelAndView mv = new ModelAndView("redirect:/user/openSignIn.do");
+    	session.invalidate();
+    	
+    	return mv;
+    }
     
     // 회원가입 페이지
     @RequestMapping(value="/user/openSignUp.do")
     public ModelAndView openSignUn(CommandMap commandMap) throws Exception{
-        ModelAndView mv = new ModelAndView("/user/signUp");
+        
+    	ModelAndView mv = new ModelAndView("/user/signUp");
         
         mv.addObject("error", commandMap.get("error"));
         
